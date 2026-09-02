@@ -2,9 +2,11 @@
 
 MiraTags is the GUI-first player-tag system for the Mira Minecraft plugin ecosystem. It targets **Paper 1.21.11** and **Java 21**, requires **MiraCore 0.1.0+** and **LuckPerms**, and exposes the currently equipped tag as a LuckPerms suffix.
 
-## Current development version
+## Download
 
-**v0.1.0**
+[**Download MiraTags v0.1.0**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.0/MiraTags-0.1.0.jar)
+
+Current release: **v0.1.0**
 
 ## Player workflow
 
