@@ -2,6 +2,7 @@ package com.mira.tags.service;
 
 import com.mira.tags.MiraTagsPlugin;
 import com.mira.tags.util.TagIds;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -76,6 +77,36 @@ public final class PlayerTagDataService {
     public void clearActive(UUID playerId) {
         data.set(path(playerId, "active"), null);
         save();
+    }
+
+    public TagDeletionResult purgeTag(String tagId) {
+        String id = TagIds.normalize(tagId);
+        int grantsRemoved = 0;
+        int selectionsCleared = 0;
+
+        ConfigurationSection players = data.getConfigurationSection("players");
+        if (players == null) return new TagDeletionResult(0, 0);
+
+        for (String playerKey : players.getKeys(false)) {
+            String base = "players." + playerKey;
+            List<String> owned = data.getStringList(base + ".owned");
+            List<String> cleaned = owned.stream()
+                    .filter(value -> !TagIds.normalize(value).equals(id))
+                    .toList();
+            if (cleaned.size() != owned.size()) {
+                grantsRemoved += owned.size() - cleaned.size();
+                data.set(base + ".owned", cleaned);
+            }
+
+            String active = TagIds.normalize(data.getString(base + ".active", ""));
+            if (active.equals(id)) {
+                data.set(base + ".active", null);
+                selectionsCleared++;
+            }
+        }
+
+        if (grantsRemoved > 0 || selectionsCleared > 0) save();
+        return new TagDeletionResult(grantsRemoved, selectionsCleared);
     }
 
     public void save() {
