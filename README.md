@@ -54,7 +54,9 @@ tags:
 
 MiraTags keeps ownership and the selected tag in its own `playerdata.yml`.
 
-The active visual suffix is applied to LuckPerms as **transient metadata**. Switching or clearing tags removes the previous MiraTags suffix instead of permanently stacking old suffix nodes onto the LuckPerms user.
+While a player is online, MiraTags manages exactly one LuckPerms suffix node at a reserved priority. Equipping or refreshing a tag clears the previous suffix at that reserved priority before applying the selected tag. The managed suffix is removed when the player leaves or MiraTags disables, then restored from `playerdata.yml` on the next join.
+
+This keeps MiraTags selections persistent without accumulating old tag suffixes in LuckPerms.
 
 The default reserved suffix priority is:
 
@@ -63,7 +65,7 @@ luckperms:
   suffix-priority: 500
 ```
 
-Any chat, tab or formatting system that reads LuckPerms suffix metadata can therefore consume the active MiraTag. MiraTab can also use the public MiraTags API directly later.
+Keep this priority reserved for MiraTags. Any chat, tab or formatting system that reads LuckPerms suffix metadata can consume the active MiraTag. MiraTab can also use the public MiraTags API directly later.
 
 ## Admin commands
 
