@@ -6,22 +6,18 @@ import com.mira.tags.util.Text;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
-import net.luckperms.api.node.Node;
+import net.luckperms.api.node.NodeType;
 import net.luckperms.api.node.types.SuffixNode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 public final class LuckPermsTagService {
     private final MiraTagsPlugin plugin;
     private final TagRegistry registry;
     private final PlayerTagDataService playerData;
     private final LuckPerms luckPerms;
-    private final Map<UUID, Node> appliedNodes = new HashMap<>();
 
     public LuckPermsTagService(MiraTagsPlugin plugin, TagRegistry registry, PlayerTagDataService playerData) {
         this.plugin = plugin;
@@ -49,14 +45,14 @@ public final class LuckPermsTagService {
     }
 
     public void clear(Player player) {
-        removeApplied(player);
+        clearManagedSuffix(player);
         playerData.clearActive(player.getUniqueId());
     }
 
     public void applyActive(Player player) {
         Optional<String> active = playerData.active(player.getUniqueId());
         if (active.isEmpty()) {
-            removeApplied(player);
+            clearManagedSuffix(player);
             return;
         }
 
@@ -73,15 +69,11 @@ public final class LuckPermsTagService {
     }
 
     public void removeApplied(Player player) {
-        Node previous = appliedNodes.remove(player.getUniqueId());
-        if (previous == null) return;
-        User user = luckPerms.getUserManager().getUser(player.getUniqueId());
-        if (user != null) user.getTransientData().remove(previous);
+        clearManagedSuffix(player);
     }
 
     public void shutdown() {
-        for (Player player : Bukkit.getOnlinePlayers()) removeApplied(player);
-        appliedNodes.clear();
+        for (Player player : Bukkit.getOnlinePlayers()) clearManagedSuffix(player);
     }
 
     private void apply(Player player, TagDefinition tag) {
@@ -93,11 +85,20 @@ public final class LuckPermsTagService {
             return;
         }
 
-        Node previous = appliedNodes.remove(player.getUniqueId());
-        if (previous != null) user.getTransientData().remove(previous);
+        clearAtReservedPriority(user);
+        user.data().add(SuffixNode.builder(Text.section(tag.suffix()), plugin.suffixPriority()).build());
+        luckPerms.getUserManager().saveUser(user);
+    }
 
-        Node node = SuffixNode.builder(Text.section(tag.suffix()), plugin.suffixPriority()).build();
-        user.getTransientData().add(node);
-        appliedNodes.put(player.getUniqueId(), node);
+    private void clearManagedSuffix(Player player) {
+        User user = luckPerms.getUserManager().getUser(player.getUniqueId());
+        if (user == null) return;
+        clearAtReservedPriority(user);
+        luckPerms.getUserManager().saveUser(user);
+    }
+
+    private void clearAtReservedPriority(User user) {
+        int priority = plugin.suffixPriority();
+        user.data().clear(NodeType.SUFFIX.predicate(node -> node.getPriority() == priority));
     }
 }
