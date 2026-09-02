@@ -87,6 +87,26 @@ public final class TagRegistry {
         return find(id).orElseThrow(() -> new IllegalStateException("Tag was saved but did not reload: " + id));
     }
 
+    public synchronized boolean delete(String requestedId) throws IOException {
+        String id = TagIds.normalize(requestedId);
+        if (id.isBlank()) return false;
+
+        YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+        ConfigurationSection section = yaml.getConfigurationSection("tags");
+        if (section == null) return false;
+
+        String rawKey = section.getKeys(false).stream()
+                .filter(key -> TagIds.normalize(key).equals(id))
+                .findFirst()
+                .orElse(null);
+        if (rawKey == null) return false;
+
+        yaml.set("tags." + rawKey, null);
+        yaml.save(file);
+        reload();
+        return true;
+    }
+
     public Optional<TagDefinition> find(String id) {
         return Optional.ofNullable(tags.get(TagIds.normalize(id)));
     }
