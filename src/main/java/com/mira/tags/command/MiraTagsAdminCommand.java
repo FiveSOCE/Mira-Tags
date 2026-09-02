@@ -6,6 +6,7 @@ import com.mira.tags.model.TagDefinition;
 import com.mira.tags.service.LuckPermsTagService;
 import com.mira.tags.service.PlayerTagDataService;
 import com.mira.tags.service.TagCreationService;
+import com.mira.tags.service.TagDeletionResult;
 import com.mira.tags.service.TagRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -17,7 +18,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -51,6 +54,7 @@ public final class MiraTagsAdminCommand implements CommandExecutor, TabCompleter
 
         switch (args[0].toLowerCase(Locale.ROOT)) {
             case "add" -> add(sender, args);
+            case "delete" -> delete(sender, args);
             case "grant" -> grant(sender, args);
             case "revoke" -> revoke(sender, args);
             case "clear" -> clear(sender, args);
@@ -72,7 +76,39 @@ public final class MiraTagsAdminCommand implements CommandExecutor, TabCompleter
             core.messages().send(sender, "&eUsage: /mtags add <Tag Name>");
             return;
         }
-        creation.begin(player, String.join(" ", java.util.Arrays.copyOfRange(args, 1, args.length)));
+        creation.begin(player, String.join(" ", Arrays.copyOfRange(args, 1, args.length)));
+    }
+
+    private void delete(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            core.messages().send(sender, "&eUsage: /mtag delete <tag>");
+            return;
+        }
+
+        String requested = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+        TagDefinition tag = registry.find(requested).orElse(null);
+        if (tag == null) {
+            core.messages().send(sender, "&cUnknown tag: " + requested);
+            return;
+        }
+
+        try {
+            if (!registry.delete(tag.id())) {
+                core.messages().send(sender, "&cCould not delete tag &f" + tag.id() + "&c from tags.yml.");
+                return;
+            }
+        } catch (IOException ex) {
+            plugin.getLogger().severe("Could not delete tag '" + tag.id() + "': " + ex.getMessage());
+            core.messages().send(sender, "&cCould not save tags.yml while deleting that tag.");
+            return;
+        }
+
+        TagDeletionResult cleanup = playerData.purgeTag(tag.id());
+        tagService.refreshAll();
+
+        core.messages().send(sender, "&aDeleted tag &f" + tag.id() + "&a.");
+        core.messages().send(sender, "&7Cleaned &f" + cleanup.grantsRemoved() + "&7 saved grant(s) and &f"
+                + cleanup.selectionsCleared() + "&7 active selection(s). External LuckPerms permission assignments were left untouched.");
     }
 
     private void grant(CommandSender sender, String[] args) {
@@ -168,6 +204,7 @@ public final class MiraTagsAdminCommand implements CommandExecutor, TabCompleter
         core.messages().send(sender, "&dMiraTags Admin");
         core.messages().send(sender, "&f/tags &7- open the player tag selector");
         core.messages().send(sender, "&f/mtags add <Tag Name> &7- create a tag using private chat input");
+        core.messages().send(sender, "&f/mtag delete <tag> &7- permanently delete a tag and clean MiraTags player data");
         core.messages().send(sender, "&f/mtags grant <player> <tag> &7- permanently unlock a tag");
         core.messages().send(sender, "&f/mtags revoke <player> <tag> &7- remove an internal unlock");
         core.messages().send(sender, "&f/mtags clear <player> &7- clear a player's active tag");
@@ -179,10 +216,13 @@ public final class MiraTagsAdminCommand implements CommandExecutor, TabCompleter
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
                                                  @NotNull String alias, @NotNull String[] args) {
-        if (args.length == 1) return match(args[0], List.of("add", "grant", "revoke", "clear", "list", "reload", "test", "help"));
+        if (args.length == 1) return match(args[0], List.of("add", "delete", "grant", "revoke", "clear", "list", "reload", "test", "help"));
         if ((args[0].equalsIgnoreCase("grant") || args[0].equalsIgnoreCase("revoke") || args[0].equalsIgnoreCase("clear"))
                 && args.length == 2) {
             return match(args[1], Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
+        }
+        if (args[0].equalsIgnoreCase("delete") && args.length == 2) {
+            return match(args[1], registry.ids());
         }
         if ((args[0].equalsIgnoreCase("grant") || args[0].equalsIgnoreCase("revoke")) && args.length == 3) {
             return match(args[2], registry.ids());
