@@ -8,6 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -27,7 +28,7 @@ public final class TagRegistry {
         reload();
     }
 
-    public void reload() {
+    public synchronized void reload() {
         tags.clear();
         YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
         ConfigurationSection section = yaml.getConfigurationSection("tags");
@@ -56,6 +57,34 @@ public final class TagRegistry {
             tags.put(id, new TagDefinition(id, displayName, suffix, icon, permission,
                     defaultUnlocked, sortOrder, List.copyOf(description)));
         }
+    }
+
+    public synchronized TagDefinition create(String requestedName, String requestedSuffix) throws IOException {
+        String name = requestedName == null ? "" : requestedName.trim();
+        String id = TagIds.normalize(name);
+        if (id.isBlank()) throw new IllegalArgumentException("Tag name does not produce a valid id.");
+        if (tags.containsKey(id)) throw new IllegalArgumentException("A tag with id '" + id + "' already exists.");
+
+        String suffix = requestedSuffix == null ? "" : requestedSuffix.trim();
+        if (suffix.isBlank()) throw new IllegalArgumentException("Tag suffix cannot be blank.");
+        suffix = " " + suffix;
+
+        YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+        String path = "tags." + id;
+        if (yaml.contains(path)) throw new IllegalArgumentException("A tag with id '" + id + "' already exists on disk.");
+
+        yaml.set(path + ".enabled", true);
+        yaml.set(path + ".display-name", "&f" + name);
+        yaml.set(path + ".suffix", suffix);
+        yaml.set(path + ".icon", "NAME_TAG");
+        yaml.set(path + ".permission", "miratags.tag." + id);
+        yaml.set(path + ".default-unlocked", false);
+        yaml.set(path + ".sort-order", 100);
+        yaml.set(path + ".description", List.of("&7Created in-game with &f/mtags add&7."));
+        yaml.save(file);
+
+        reload();
+        return find(id).orElseThrow(() -> new IllegalStateException("Tag was saved but did not reload: " + id));
     }
 
     public Optional<TagDefinition> find(String id) {

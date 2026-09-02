@@ -5,6 +5,7 @@ import com.mira.tags.MiraTagsPlugin;
 import com.mira.tags.model.TagDefinition;
 import com.mira.tags.service.LuckPermsTagService;
 import com.mira.tags.service.PlayerTagDataService;
+import com.mira.tags.service.TagCreationService;
 import com.mira.tags.service.TagRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -27,14 +28,17 @@ public final class MiraTagsAdminCommand implements CommandExecutor, TabCompleter
     private final TagRegistry registry;
     private final PlayerTagDataService playerData;
     private final LuckPermsTagService tagService;
+    private final TagCreationService creation;
 
     public MiraTagsAdminCommand(MiraTagsPlugin plugin, MiraCore core, TagRegistry registry,
-                                PlayerTagDataService playerData, LuckPermsTagService tagService) {
+                                PlayerTagDataService playerData, LuckPermsTagService tagService,
+                                TagCreationService creation) {
         this.plugin = plugin;
         this.core = core;
         this.registry = registry;
         this.playerData = playerData;
         this.tagService = tagService;
+        this.creation = creation;
     }
 
     @Override
@@ -46,6 +50,7 @@ public final class MiraTagsAdminCommand implements CommandExecutor, TabCompleter
         }
 
         switch (args[0].toLowerCase(Locale.ROOT)) {
+            case "add" -> add(sender, args);
             case "grant" -> grant(sender, args);
             case "revoke" -> revoke(sender, args);
             case "clear" -> clear(sender, args);
@@ -56,6 +61,18 @@ public final class MiraTagsAdminCommand implements CommandExecutor, TabCompleter
             default -> help(sender);
         }
         return true;
+    }
+
+    private void add(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player player)) {
+            core.messages().send(sender, "&c/mtags add must be started by a player because the tag format is entered in chat.");
+            return;
+        }
+        if (args.length < 2) {
+            core.messages().send(sender, "&eUsage: /mtags add <Tag Name>");
+            return;
+        }
+        creation.begin(player, String.join(" ", java.util.Arrays.copyOfRange(args, 1, args.length)));
     }
 
     private void grant(CommandSender sender, String[] args) {
@@ -150,6 +167,7 @@ public final class MiraTagsAdminCommand implements CommandExecutor, TabCompleter
     private void help(CommandSender sender) {
         core.messages().send(sender, "&dMiraTags Admin");
         core.messages().send(sender, "&f/tags &7- open the player tag selector");
+        core.messages().send(sender, "&f/mtags add <Tag Name> &7- create a tag using private chat input");
         core.messages().send(sender, "&f/mtags grant <player> <tag> &7- permanently unlock a tag");
         core.messages().send(sender, "&f/mtags revoke <player> <tag> &7- remove an internal unlock");
         core.messages().send(sender, "&f/mtags clear <player> &7- clear a player's active tag");
@@ -161,7 +179,7 @@ public final class MiraTagsAdminCommand implements CommandExecutor, TabCompleter
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
                                                  @NotNull String alias, @NotNull String[] args) {
-        if (args.length == 1) return match(args[0], List.of("grant", "revoke", "clear", "list", "reload", "test", "help"));
+        if (args.length == 1) return match(args[0], List.of("add", "grant", "revoke", "clear", "list", "reload", "test", "help"));
         if ((args[0].equalsIgnoreCase("grant") || args[0].equalsIgnoreCase("revoke") || args[0].equalsIgnoreCase("clear"))
                 && args.length == 2) {
             return match(args[1], Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());

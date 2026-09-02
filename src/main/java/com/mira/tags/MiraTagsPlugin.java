@@ -8,9 +8,11 @@ import com.mira.tags.command.MiraTagsAdminCommand;
 import com.mira.tags.command.TagsCommand;
 import com.mira.tags.gui.TagMenuService;
 import com.mira.tags.listener.PlayerTagListener;
+import com.mira.tags.listener.TagCreationListener;
 import com.mira.tags.listener.TagMenuListener;
 import com.mira.tags.service.LuckPermsTagService;
 import com.mira.tags.service.PlayerTagDataService;
+import com.mira.tags.service.TagCreationService;
 import com.mira.tags.service.TagRegistry;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,6 +25,7 @@ public final class MiraTagsPlugin extends JavaPlugin {
     private PlayerTagDataService playerData;
     private LuckPermsTagService tagService;
     private TagMenuService menus;
+    private TagCreationService creation;
     private MiraTagsApi api;
 
     @Override
@@ -35,6 +38,7 @@ public final class MiraTagsPlugin extends JavaPlugin {
         playerData = new PlayerTagDataService(this);
         tagService = new LuckPermsTagService(this, registry, playerData);
         menus = new TagMenuService(this, registry, playerData, tagService);
+        creation = new TagCreationService(this, core, registry);
         api = new MiraTagsApiImpl(this, registry, playerData, tagService);
 
         core.modules().register(this, "MiraTags");
@@ -43,6 +47,7 @@ public final class MiraTagsPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(
                 new TagMenuListener(this, menus, registry, playerData, tagService), this);
         getServer().getPluginManager().registerEvents(new PlayerTagListener(this, tagService), this);
+        getServer().getPluginManager().registerEvents(new TagCreationListener(creation), this);
 
         PluginCommand tagsCommand = getCommand("tags");
         PluginCommand adminCommand = getCommand("miratags");
@@ -52,14 +57,14 @@ public final class MiraTagsPlugin extends JavaPlugin {
         }
 
         tagsCommand.setExecutor(new TagsCommand(menus));
-        MiraTagsAdminCommand admin = new MiraTagsAdminCommand(this, core, registry, playerData, tagService);
+        MiraTagsAdminCommand admin = new MiraTagsAdminCommand(this, core, registry, playerData, tagService, creation);
         adminCommand.setExecutor(admin);
         adminCommand.setTabCompleter(admin);
 
         getServer().getOnlinePlayers().forEach(tagService::applyActive);
 
         core.modules().setHealth(this, ModuleHealth.HEALTHY,
-                "Tag registry, LuckPerms suffixes and selector GUI ready");
+                "Tag registry, LuckPerms suffixes, in-game creation and selector GUI ready");
         getLogger().info("MiraTags v" + getPluginMeta().getVersion() + " enabled with "
                 + registry.enabledTags().size() + " enabled tag(s).");
     }

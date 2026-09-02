@@ -1,5 +1,5 @@
 name: MiraTags
-version: 0.1.0
+version: 0.1.1
 main: com.mira.tags.MiraTagsPlugin
 api-version: '1.21'
 authors: [FiveS]
@@ -13,7 +13,7 @@ commands:
     permission: miratags.use
   miratags:
     description: MiraTags administration and diagnostics.
-    usage: /miratags <grant|revoke|clear|list|reload|test|help>
+    usage: /miratags <add|grant|revoke|clear|list|reload|test|help>
     aliases: [mtags]
     permission: miratags.admin
 
