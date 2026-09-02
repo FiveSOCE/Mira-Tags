@@ -1,0 +1,26 @@
+name: MiraTags
+version: 0.1.0
+main: com.mira.tags.MiraTagsPlugin
+api-version: '1.21'
+authors: [FiveS]
+description: GUI-first player tags with LuckPerms suffix integration for the Mira plugin ecosystem.
+depend: [MiraCore, LuckPerms]
+
+commands:
+  tags:
+    description: Open the MiraTags selector.
+    usage: /tags
+    permission: miratags.use
+  miratags:
+    description: MiraTags administration and diagnostics.
+    usage: /miratags <grant|revoke|clear|list|reload|test|help>
+    aliases: [mtags]
+    permission: miratags.admin
+
+permissions:
+  miratags.use:
+    description: Allows opening and using the tags GUI.
+    default: true
+  miratags.admin:
+    description: Allows MiraTags administration commands.
+    default: op

@@ -1,0 +1,11 @@
+luckperms:
+  # MiraTags uses one transient LuckPerms suffix node at this priority.
+  # Keep this priority reserved for MiraTags so it does not compete with another suffix.
+  suffix-priority: 500
+
+gui:
+  title: "&5Tags"
+  hide-locked: false
+  locked-message: "&cYou have not unlocked this tag."
+  equipped-message: "&aEquipped tag: &f%tag%"
+  cleared-message: "&eYour active tag has been cleared."

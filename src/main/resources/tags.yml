@@ -1,0 +1,23 @@
+# MiraTags definitions.
+# Replace the example tag with your real server tags.
+#
+# permission:
+#   Blank means the tag is grant-only unless default-unlocked is true.
+#   Set a permission node to make ownership permission-based.
+#
+# suffix:
+#   This is supplied to LuckPerms as the active suffix. Include spacing exactly
+#   how you want it to appear after the player's name.
+
+tags:
+  example:
+    enabled: true
+    display-name: "&dExample"
+    suffix: " &8[&dExample&8]"
+    icon: NAME_TAG
+    permission: ""
+    default-unlocked: false
+    sort-order: 100
+    description:
+      - "&7Example MiraTags entry."
+      - "&7Grant it with &f/mtags grant <player> example&7."
