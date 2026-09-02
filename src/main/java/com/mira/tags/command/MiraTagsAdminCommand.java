@@ -53,7 +53,7 @@ public final class MiraTagsAdminCommand implements CommandExecutor, TabCompleter
         }
 
         switch (args[0].toLowerCase(Locale.ROOT)) {
-            case "add" -> add(sender, args);
+            case "create", "add" -> add(sender, args);
             case "delete" -> delete(sender, args);
             case "grant" -> grant(sender, args);
             case "revoke" -> revoke(sender, args);
@@ -69,11 +69,11 @@ public final class MiraTagsAdminCommand implements CommandExecutor, TabCompleter
 
     private void add(CommandSender sender, String[] args) {
         if (!(sender instanceof Player player)) {
-            core.messages().send(sender, "&c/mtags add must be started by a player because the tag format is entered in chat.");
+            core.messages().send(sender, "&c/mtags create must be started by a player because the tag format is entered in chat.");
             return;
         }
         if (args.length < 2) {
-            core.messages().send(sender, "&eUsage: /mtags add <Tag Name>");
+            core.messages().send(sender, "&eUsage: /mtags create <Tag Name>");
             return;
         }
         creation.begin(player, String.join(" ", Arrays.copyOfRange(args, 1, args.length)));
@@ -81,7 +81,7 @@ public final class MiraTagsAdminCommand implements CommandExecutor, TabCompleter
 
     private void delete(CommandSender sender, String[] args) {
         if (args.length < 2) {
-            core.messages().send(sender, "&eUsage: /mtag delete <tag>");
+            core.messages().send(sender, "&eUsage: /mtags delete <tag>");
             return;
         }
 
@@ -203,8 +203,9 @@ public final class MiraTagsAdminCommand implements CommandExecutor, TabCompleter
     private void help(CommandSender sender) {
         core.messages().send(sender, "&dMiraTags Admin");
         core.messages().send(sender, "&f/tags &7- open the player tag selector");
-        core.messages().send(sender, "&f/mtags add <Tag Name> &7- create a tag using private chat input");
-        core.messages().send(sender, "&f/mtag delete <tag> &7- permanently delete a tag and clean MiraTags player data");
+        core.messages().send(sender, "&f/mtags create <Tag Name> &7- create a tag using private chat input");
+        core.messages().send(sender, "&7Alias: &f/mtags add <Tag Name>");
+        core.messages().send(sender, "&f/mtags delete <tag> &7- permanently delete a tag and clean MiraTags player data");
         core.messages().send(sender, "&f/mtags grant <player> <tag> &7- permanently unlock a tag");
         core.messages().send(sender, "&f/mtags revoke <player> <tag> &7- remove an internal unlock");
         core.messages().send(sender, "&f/mtags clear <player> &7- clear a player's active tag");
@@ -216,7 +217,7 @@ public final class MiraTagsAdminCommand implements CommandExecutor, TabCompleter
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command,
                                                  @NotNull String alias, @NotNull String[] args) {
-        if (args.length == 1) return match(args[0], List.of("add", "delete", "grant", "revoke", "clear", "list", "reload", "test", "help"));
+        if (args.length == 1) return match(args[0], List.of("create", "add", "delete", "grant", "revoke", "clear", "list", "reload", "test", "help"));
         if ((args[0].equalsIgnoreCase("grant") || args[0].equalsIgnoreCase("revoke") || args[0].equalsIgnoreCase("clear"))
                 && args.length == 2) {
             return match(args[1], Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
