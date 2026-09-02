@@ -4,13 +4,19 @@ MiraTags is the GUI-first player-tag system for the Mira Minecraft plugin ecosys
 
 ## Download
 
-[**Download MiraTags v0.1.2**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.2/MiraTags-0.1.2.jar)
+[**Download MiraTags v0.1.3**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.3/MiraTags-0.1.3.jar)
 
-Current release: **v0.1.2**
+Current release: **v0.1.3**
 
-## Quick tag creation
+## Create tags in-game
 
-Admins can create tags entirely in-game:
+Preferred command:
+
+```text
+/mtags create <Tag Name>
+```
+
+Legacy alias retained:
 
 ```text
 /mtags add <Tag Name>
@@ -19,100 +25,62 @@ Admins can create tags entirely in-game:
 Example:
 
 ```text
-/mtags add King
+/mtags create King
 ```
 
-MiraTags then waits for that player's next chat message and privately captures the tag format. The message is cancelled and is not broadcast.
+MiraTags waits for that player's next chat message and privately captures the tag format. The message is cancelled and is not broadcast.
 
 ```text
 &8[&eKing&8]
 ```
 
-That creates a persistent `king` definition in `plugins/MiraTags/tags.yml` with:
-
-- display name `King`
-- suffix ` &8[&eKing&8]` (MiraTags adds the leading space automatically)
-- `NAME_TAG` GUI icon
-- LuckPerms backing permission `miratags.tag.king`
-- default locked state
-- immediate availability to `/tags`, `/mtags grant`, LuckPerms permissions and the public API
+That creates a persistent `king` definition in `plugins/MiraTags/tags.yml` with display name `King`, suffix ` &8[&eKing&8]`, `NAME_TAG` GUI icon, LuckPerms backing permission `miratags.tag.king`, default locked state, and immediate availability to the GUI, grants and API.
 
 Type `cancel` instead of a tag format to abort creation. Duplicate ids are rejected safely.
 
-## Tag deletion
+## Delete tags
 
-Delete a tag with either alias:
+Both admin aliases support deletion:
 
 ```text
-/mtag delete <tag>
 /mtags delete <tag>
+/mtag delete <tag>
 ```
 
-Example:
-
-```text
-/mtag delete king
-```
-
-Deletion immediately:
-
-- removes the persistent definition from `tags.yml`
-- removes that tag from MiraTags internal player grants
-- clears saved active selections using that tag
-- refreshes online players so an equipped deleted tag disappears immediately
-- leaves external LuckPerms permission assignments untouched
-
-Leaving external LuckPerms nodes alone is intentional. A permission such as `miratags.tag.king` becomes harmless once the `king` tag definition no longer exists, and MiraTags does not modify LuckPerms group/user permission policy behind an administrator's back.
+Deletion removes the persistent tag definition, purges MiraTags internal grants and active selections, and refreshes online players immediately. External LuckPerms permission assignments are intentionally left untouched.
 
 ## Player workflow
-
-Run:
 
 ```text
 /tags
 ```
 
-The selector shows enabled tags from `tags.yml`.
-
-- unlocked tag: click to equip
-- active tag: click again to clear it
-- locked tag: shown as locked unless `gui.hide-locked` is enabled
-- clear button: removes the current active tag
-- pagination supports more than 45 tags
+The selector shows enabled tags from `tags.yml`. Unlocked tags can be equipped, the active tag can be clicked again to clear it, locked tags are shown unless configured otherwise, and pagination supports more than 45 tags.
 
 Only one MiraTag can be active at once.
 
 ## Ownership
 
-A tag can be unlocked in three independent ways:
-
-1. `default-unlocked: true`
-2. an internal permanent grant from MiraTags
-3. a LuckPerms/Bukkit permission configured on that tag
-
-Tags created with `/mtags add` automatically use `miratags.tag.<id>` as their permission backing.
+A tag can be unlocked by `default-unlocked: true`, an internal MiraTags grant, or a configured LuckPerms/Bukkit permission. Tags created in-game automatically use `miratags.tag.<id>` as their permission backing.
 
 ## LuckPerms integration
 
-MiraTags keeps ownership and the selected tag in its own `playerdata.yml`.
+MiraTags stores ownership and selection in `playerdata.yml`. While a player is online it manages one LuckPerms suffix node at a reserved priority. A chat/tab formatting plugin must read LuckPerms metadata to display the suffix.
 
-While a player is online, MiraTags manages exactly one LuckPerms suffix node at a reserved priority. Equipping or refreshing a tag clears the previous suffix at that reserved priority before applying the selected tag. The managed suffix is removed when the player leaves or MiraTags disables, then restored from `playerdata.yml` on the next join.
-
-The default reserved suffix priority is:
+Default priority:
 
 ```yaml
 luckperms:
   suffix-priority: 500
 ```
 
-Keep this priority reserved for MiraTags. A chat/tab formatting plugin must read LuckPerms metadata to display the suffix.
-
 ## Admin commands
 
 ```text
+/mtags create <Tag Name>
 /mtags add <Tag Name>
-/mtag delete <tag>
 /mtags delete <tag>
+/mtag delete <tag>
 /mtags grant <player> <tag>
 /mtags revoke <player> <tag>
 /mtags clear <player>
@@ -122,7 +90,7 @@ Keep this priority reserved for MiraTags. A chat/tab formatting plugin must read
 /mtags help
 ```
 
-Both `/mtags` and `/mtag` are aliases for the MiraTags admin command. `/mtags add` is player-only because its second step is captured through private chat input.
+Both `/mtags` and `/mtag` are aliases for the MiraTags admin command. Creation is player-only because the second step is captured through private chat input.
 
 ## Public API
 
@@ -141,8 +109,6 @@ tags.equip(player, "king");
 | `miratags.use` | Everyone | Open and use `/tags` |
 | `miratags.admin` | OP | MiraTags admin commands |
 
-Individual tag permissions are stored per definition in `tags.yml`.
-
 ## Data files
 
 ```text
@@ -152,17 +118,14 @@ plugins/MiraTags/
 └── playerdata.yml
 ```
 
-## Quick v0.1.2 test
+## Quick v0.1.3 test
 
 1. Install MiraCore, LuckPerms and MiraTags.
-2. Run `/mtags add King`.
-3. Enter `&8[&eKing&8]` in chat and confirm it is not broadcast.
-4. Grant and equip `king`.
-5. Run `/mtag delete king`.
-6. Confirm `king` disappears from `/mtags list` and `/tags` immediately.
-7. Confirm an online player wearing King loses the suffix immediately.
-8. Restart the server and confirm `king` does not return.
-9. Recreate King and confirm it behaves like a fresh tag.
+2. Run `/version MiraTags` and confirm `0.1.3`.
+3. Type `/mtags ` and confirm `create`, `add`, and `delete` appear in tab completion.
+4. Run `/mtags create King` and enter `&8[&eKing&8]` in chat.
+5. Confirm `king` appears in `/mtags list` and `/tags`.
+6. Run `/mtags delete king` and confirm it disappears immediately.
 
 ## Building
 
@@ -173,5 +136,5 @@ gradle clean test build
 Output:
 
 ```text
-build/libs/MiraTags-0.1.2.jar
+build/libs/MiraTags-0.1.3.jar
 ```
