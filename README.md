@@ -4,11 +4,11 @@ MiraTags is the GUI-first player-tag system for the Mira Minecraft plugin ecosys
 
 ## Download
 
-[**Download MiraTags v0.1.1**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.1/MiraTags-0.1.1.jar)
+[**Download MiraTags v0.1.2**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.2/MiraTags-0.1.2.jar)
 
-Current release: **v0.1.1**
+Current release: **v0.1.2**
 
-## v0.1.1 quick tag creation
+## Quick tag creation
 
 Admins can create tags entirely in-game:
 
@@ -38,6 +38,31 @@ That creates a persistent `king` definition in `plugins/MiraTags/tags.yml` with:
 - immediate availability to `/tags`, `/mtags grant`, LuckPerms permissions and the public API
 
 Type `cancel` instead of a tag format to abort creation. Duplicate ids are rejected safely.
+
+## Tag deletion
+
+Delete a tag with either alias:
+
+```text
+/mtag delete <tag>
+/mtags delete <tag>
+```
+
+Example:
+
+```text
+/mtag delete king
+```
+
+Deletion immediately:
+
+- removes the persistent definition from `tags.yml`
+- removes that tag from MiraTags internal player grants
+- clears saved active selections using that tag
+- refreshes online players so an equipped deleted tag disappears immediately
+- leaves external LuckPerms permission assignments untouched
+
+Leaving external LuckPerms nodes alone is intentional. A permission such as `miratags.tag.king` becomes harmless once the `king` tag definition no longer exists, and MiraTags does not modify LuckPerms group/user permission policy behind an administrator's back.
 
 ## Player workflow
 
@@ -86,6 +111,8 @@ Keep this priority reserved for MiraTags. A chat/tab formatting plugin must read
 
 ```text
 /mtags add <Tag Name>
+/mtag delete <tag>
+/mtags delete <tag>
 /mtags grant <player> <tag>
 /mtags revoke <player> <tag>
 /mtags clear <player>
@@ -95,7 +122,7 @@ Keep this priority reserved for MiraTags. A chat/tab formatting plugin must read
 /mtags help
 ```
 
-`/mtags add` is player-only because its second step is captured through private chat input.
+Both `/mtags` and `/mtag` are aliases for the MiraTags admin command. `/mtags add` is player-only because its second step is captured through private chat input.
 
 ## Public API
 
@@ -125,16 +152,17 @@ plugins/MiraTags/
 └── playerdata.yml
 ```
 
-## Quick v0.1.1 test
+## Quick v0.1.2 test
 
 1. Install MiraCore, LuckPerms and MiraTags.
 2. Run `/mtags add King`.
 3. Enter `&8[&eKing&8]` in chat and confirm it is not broadcast.
-4. Run `/mtags list` and confirm `king` exists.
-5. Check `tags.yml` and confirm the persistent definition and `miratags.tag.king` permission.
-6. Run `/mtags grant <yourname> king`.
-7. Open `/tags`, equip King, and confirm your LuckPerms-aware chat format displays it.
-8. Restart the server and confirm the created tag still exists.
+4. Grant and equip `king`.
+5. Run `/mtag delete king`.
+6. Confirm `king` disappears from `/mtags list` and `/tags` immediately.
+7. Confirm an online player wearing King loses the suffix immediately.
+8. Restart the server and confirm `king` does not return.
+9. Recreate King and confirm it behaves like a fresh tag.
 
 ## Building
 
@@ -145,5 +173,5 @@ gradle clean test build
 Output:
 
 ```text
-build/libs/MiraTags-0.1.1.jar
+build/libs/MiraTags-0.1.2.jar
 ```
