@@ -1,140 +1,49 @@
 # MiraTags
 
-MiraTags is the GUI-first player-tag system for the Mira Minecraft plugin ecosystem. It targets **Paper 1.21.11** and **Java 21**, requires **MiraCore 0.1.0+** and **LuckPerms**, and exposes the currently equipped tag as a LuckPerms suffix.
+MiraTags is the GUI-first player-tag system for the Mira Paper server suite. It manages persistent tag definitions, player ownership and selection, exposes the active tag through LuckPerms metadata, and supports administrative, timed and programmatic grants.
 
 ## Download
 
 [**Download MiraTags v0.1.3**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.3/MiraTags-0.1.3.jar)
 
-Current release: **v0.1.3**
+## Requirements / Dependencies
 
-## Create tags in-game
+- Paper 1.21.11
+- Java 21
+- MiraCore 0.1.0 or newer
+- LuckPerms
 
-Preferred command:
+## How MiraTags Works
 
-```text
-/mtags create <Tag Name>
-```
+Tags are persistent definitions stored in `plugins/MiraTags/tags.yml`. Players open `/tags` to browse enabled tags, equip an unlocked tag or clear the currently equipped tag. Only one MiraTag can be active at a time. Player ownership and active selection are stored in `playerdata.yml`.
 
-Legacy alias retained:
+A tag can be unlocked by `default-unlocked: true`, an internal MiraTags grant, a timed grant, or the configured LuckPerms/Bukkit permission. While a player is online, MiraTags manages one LuckPerms suffix node at its reserved priority so chat/tab plugins that read LuckPerms metadata can display the selected tag.
 
-```text
-/mtags add <Tag Name>
-```
+Administrators can create tags in-game with `/mtags create <Tag Name>`. MiraTags then captures that administrator's next chat message privately as the tag format, cancels the chat broadcast, generates a persistent ID and backing permission such as `miratags.tag.king`, and immediately makes the tag available to the GUI/API. Typing `cancel` aborts the creation flow. Deleting a tag removes its MiraTags definition, internal grants and active selections but intentionally does not remove external LuckPerms assignments.
 
-Example:
+## Commands
 
-```text
-/mtags create King
-```
+| Command | Permission | What it does |
+| --- | --- | --- |
+| `/tags` | `miratags.use` | Opens the player tag selector GUI. |
+| `/mtags create <Tag Name>` | `miratags.admin` | Starts the two-step in-game tag creation flow. |
+| `/mtags add <Tag Name>` | `miratags.admin` | Legacy alias for tag creation. |
+| `/mtags delete <tag>` | `miratags.admin` | Deletes a persistent tag definition and clears MiraTags-owned grants/selections for it. |
+| `/mtags grant <player> <tag>` | `miratags.admin` | Grants permanent internal ownership of a tag. |
+| `/mtags revoke <player> <tag>` | `miratags.admin` | Revokes an internal tag grant. |
+| `/mtags clear <player>` | `miratags.admin` | Clears the selected player's active tag. |
+| `/mtags list` | `miratags.admin` | Lists registered tag definitions. |
+| `/mtags reload` | `miratags.admin` | Reloads MiraTags configuration/data. |
+| `/mtags test` | `miratags.admin` | Runs MiraTags diagnostics/self-tests. |
+| `/mtags help` | `miratags.admin` | Shows administration help. |
+| `/mtagtime <player> <tag> <30m|12h|7d>` | `miratags.admin` | Grants a tag for a limited duration in current source. |
 
-MiraTags waits for that player's next chat message and privately captures the tag format. The message is cancelled and is not broadcast.
-
-```text
-&8[&eKing&8]
-```
-
-That creates a persistent `king` definition in `plugins/MiraTags/tags.yml` with display name `King`, suffix ` &8[&eKing&8]`, `NAME_TAG` GUI icon, LuckPerms backing permission `miratags.tag.king`, default locked state, and immediate availability to the GUI, grants and API.
-
-Type `cancel` instead of a tag format to abort creation. Duplicate ids are rejected safely.
-
-## Delete tags
-
-Both admin aliases support deletion:
-
-```text
-/mtags delete <tag>
-/mtag delete <tag>
-```
-
-Deletion removes the persistent tag definition, purges MiraTags internal grants and active selections, and refreshes online players immediately. External LuckPerms permission assignments are intentionally left untouched.
-
-## Player workflow
-
-```text
-/tags
-```
-
-The selector shows enabled tags from `tags.yml`. Unlocked tags can be equipped, the active tag can be clicked again to clear it, locked tags are shown unless configured otherwise, and pagination supports more than 45 tags.
-
-Only one MiraTag can be active at once.
-
-## Ownership
-
-A tag can be unlocked by `default-unlocked: true`, an internal MiraTags grant, or a configured LuckPerms/Bukkit permission. Tags created in-game automatically use `miratags.tag.<id>` as their permission backing.
-
-## LuckPerms integration
-
-MiraTags stores ownership and selection in `playerdata.yml`. While a player is online it manages one LuckPerms suffix node at a reserved priority. A chat/tab formatting plugin must read LuckPerms metadata to display the suffix.
-
-Default priority:
-
-```yaml
-luckperms:
-  suffix-priority: 500
-```
-
-## Admin commands
-
-```text
-/mtags create <Tag Name>
-/mtags add <Tag Name>
-/mtags delete <tag>
-/mtag delete <tag>
-/mtags grant <player> <tag>
-/mtags revoke <player> <tag>
-/mtags clear <player>
-/mtags list
-/mtags reload
-/mtags test
-/mtags help
-```
-
-Both `/mtags` and `/mtag` are aliases for the MiraTags admin command. Creation is player-only because the second step is captured through private chat input.
-
-## Public API
-
-MiraTags registers `MiraTagsApi` in MiraCore's service registry.
-
-```java
-MiraTagsApi tags = core.services().require(MiraTagsApi.class);
-tags.grant(playerId, "king");
-tags.equip(player, "king");
-```
+Admin aliases: `/miratags`, `/mtags`, `/mtag`.
 
 ## Permissions
 
-| Permission | Default | Purpose |
+| Permission | Default | What it does |
 | --- | --- | --- |
-| `miratags.use` | Everyone | Open and use `/tags` |
-| `miratags.admin` | OP | MiraTags admin commands |
-
-## Data files
-
-```text
-plugins/MiraTags/
-├── config.yml
-├── tags.yml
-└── playerdata.yml
-```
-
-## Quick v0.1.3 test
-
-1. Install MiraCore, LuckPerms and MiraTags.
-2. Run `/version MiraTags` and confirm `0.1.3`.
-3. Type `/mtags ` and confirm `create`, `add`, and `delete` appear in tab completion.
-4. Run `/mtags create King` and enter `&8[&eKing&8]` in chat.
-5. Confirm `king` appears in `/mtags list` and `/tags`.
-6. Run `/mtags delete king` and confirm it disappears immediately.
-
-## Building
-
-```bash
-gradle clean test build
-```
-
-Output:
-
-```text
-build/libs/MiraTags-0.1.3.jar
-```
+| `miratags.use` | Everyone | Allows opening and using the tag selector. |
+| `miratags.admin` | OP | Allows tag creation, deletion, grants, timed grants, reloads and diagnostics. |
+| `miratags.tag.<id>` | Configured per tag | Typical backing permission used to unlock a specific tag. |
