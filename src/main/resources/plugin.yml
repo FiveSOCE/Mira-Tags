@@ -1,9 +1,9 @@
 name: MiraTags
-version: 0.1.3
+version: 0.1.4
 main: com.mira.tags.MiraTagsPlugin
 api-version: '1.21'
 authors: [FiveS]
-description: GUI-first player tags with LuckPerms suffix integration for the Mira plugin ecosystem.
+description: GUI-first tags with milestone achievements, seasonal unlocks and timed ownership.
 depend: [MiraCore, LuckPerms]
 
 commands:
@@ -15,6 +15,10 @@ commands:
     description: MiraTags administration and diagnostics.
     usage: /miratags <create|add|delete|grant|revoke|clear|list|reload|test|help>
     aliases: [mtags, mtag]
+    permission: miratags.admin
+  mtagtime:
+    description: Grant a tag for a limited duration.
+    usage: /mtagtime <player> <tag> <30m|12h|7d>
     permission: miratags.admin
 
 permissions:
