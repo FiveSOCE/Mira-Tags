@@ -35,19 +35,19 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: MiraTags-0.1.4
-          path: build/libs/MiraTags-0.1.4.jar
+          name: MiraTags-0.1.5
+          path: build/libs/MiraTags-0.1.5.jar
           if-no-files-found: error
 
-      - name: Publish v0.1.4 release if missing
+      - name: Publish v0.1.5 release if missing
         if: github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if ! gh release view v0.1.4 >/dev/null 2>&1; then
-            gh release create v0.1.4 \
-              build/libs/MiraTags-0.1.4.jar \
+          if ! gh release view v0.1.5 >/dev/null 2>&1; then
+            gh release create v0.1.5 \
+              build/libs/MiraTags-0.1.5.jar \
               --target "${{ github.sha }}" \
-              --title "MiraTags v0.1.4" \
-              --notes "Adds MiraCore milestone/season tag unlocks, timed ownership and eight generic starter tags: OG, Grinder, PvP, Builder, Collector, Lucky, Veteran and GG."
+              --title "MiraTags v0.1.5" \
+              --notes "Synchronizes all tag definitions into LuckPerms backing groups from startup, gives every starter tag a real miratags.tag.<id> permission, normalizes the GUI to NAME_TAG items and renders the actual styled in-game tag suffix as the item name."
           fi
