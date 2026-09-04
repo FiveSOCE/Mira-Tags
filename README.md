@@ -4,7 +4,7 @@ MiraTags is the GUI-first player-tag system for the Mira Paper server suite. It 
 
 ## Download
 
-[**Download MiraTags v0.1.4**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.4/MiraTags-0.1.4.jar)
+[**Download MiraTags v0.1.5**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.5/MiraTags-0.1.5.jar)
 
 ## Requirements / Dependencies
 
@@ -15,13 +15,13 @@ MiraTags is the GUI-first player-tag system for the Mira Paper server suite. It 
 
 ## How MiraTags Works
 
-Tags are persistent definitions stored in `plugins/MiraTags/tags.yml`. Players open `/tags` to browse enabled tags, equip an unlocked tag or clear the currently equipped tag. Only one MiraTag can be active at a time. Player ownership and active selection are stored in `playerdata.yml`.
+Tags are persistent definitions stored in `plugins/MiraTags/tags.yml`. Players open `/tags` to browse enabled tags, equip an unlocked tag or clear the currently equipped tag. Every tag entry uses a `NAME_TAG` item and the item name is the actual formatted suffix preview, including its configured colors and brackets, rather than the raw tag ID. Only one MiraTag can be active at a time. Player ownership and active selection are stored in `playerdata.yml`.
 
-A tag can be unlocked by `default-unlocked: true`, an internal MiraTags grant, a timed grant, or the configured LuckPerms/Bukkit permission. While a player is online, MiraTags manages one LuckPerms suffix node at its reserved priority so chat/tab plugins that read LuckPerms metadata can display the selected tag.
+A tag can be unlocked by `default-unlocked: true`, an internal MiraTags grant, a timed grant, or the configured LuckPerms/Bukkit permission. In v0.1.5 every enabled tag is also synchronized into LuckPerms as a backing group named `miratag_<id>` containing its `miratags.tag.<id>` permission. Starter tags therefore exist in LuckPerms immediately on first boot instead of only existing inside `tags.yml`. While a player is online, MiraTags manages one LuckPerms suffix node at its reserved priority so chat/tab plugins that read LuckPerms metadata can display the selected tag.
 
 Administrators can create tags in-game with `/mtags create <Tag Name>`. MiraTags then captures that administrator's next chat message privately as the tag format, cancels the chat broadcast, generates a persistent ID and backing permission such as `miratags.tag.king`, and immediately makes the tag available to the GUI/API. Typing `cancel` aborts the creation flow. Deleting a tag removes its MiraTags definition, internal grants and active selections but intentionally does not remove external LuckPerms assignments.
 
-v0.1.4 adds MiraCore milestone-driven unlocks, timed tag ownership and seasonal champion support. Built-in milestone mappings currently cover FTop Champion, Pinata Slayer and Crate Jackpot, while season champion milestones can generate/grant season-specific tags. A fresh install also ships with eight editable generic starter tags: OG, Grinder, PvP, Builder, Collector, Lucky, Veteran and GG.
+v0.1.5 adds MiraCore milestone-driven unlocks, timed tag ownership and seasonal champion support. Built-in milestone mappings currently cover FTop Champion, Pinata Slayer and Crate Jackpot, while season champion milestones can generate/grant season-specific tags. A fresh install also ships with eight editable generic starter tags: OG, Grinder, PvP, Builder, Collector, Lucky, Veteran and GG.
 
 ## Commands
 
@@ -49,3 +49,19 @@ Admin aliases: `/miratags`, `/mtags`, `/mtag`.
 | `miratags.use` | Everyone | Allows opening and using the tag selector. |
 | `miratags.admin` | OP | Allows tag creation, deletion, grants, timed grants, reloads and diagnostics. |
 | `miratags.tag.<id>` | Configured per tag | Typical backing permission used to unlock a specific tag. |
+
+
+## Starter LuckPerms Links
+
+A fresh install creates/synchronizes the following LuckPerms-backed tag groups:
+
+- `miratag_og` -> `miratags.tag.og`
+- `miratag_grinder` -> `miratags.tag.grinder`
+- `miratag_pvp` -> `miratags.tag.pvp`
+- `miratag_builder` -> `miratags.tag.builder`
+- `miratag_collector` -> `miratags.tag.collector`
+- `miratag_lucky` -> `miratags.tag.lucky`
+- `miratag_veteran` -> `miratags.tag.veteran`
+- `miratag_gg` -> `miratags.tag.gg`
+
+New tags created in-game are synchronized to LuckPerms immediately as well.
