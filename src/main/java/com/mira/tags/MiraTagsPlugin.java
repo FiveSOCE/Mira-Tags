@@ -40,6 +40,7 @@ public final class MiraTagsPlugin extends JavaPlugin {
         registry = new TagRegistry(this);
         playerData = new PlayerTagDataService(this);
         tagService = new LuckPermsTagService(this, registry, playerData);
+        tagService.syncBackingGroups();
         menus = new TagMenuService(this, registry, playerData, tagService);
         creation = new TagCreationService(this, core, registry);
         milestones = new MilestoneTagService(this, core, registry, playerData, tagService);
@@ -91,6 +92,7 @@ public final class MiraTagsPlugin extends JavaPlugin {
         reloadConfig();
         registry.reload();
         playerData.reload();
+        tagService.syncBackingGroups();
         tagService.refreshAll();
     }
 
