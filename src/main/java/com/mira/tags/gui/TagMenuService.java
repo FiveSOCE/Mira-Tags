@@ -77,13 +77,16 @@ public final class TagMenuService {
     }
 
     private ItemStack tagItem(TagDefinition tag, boolean owned, boolean selected) {
-        ItemStack item = new ItemStack(tag.icon());
+        ItemStack item = new ItemStack(Material.NAME_TAG);
         ItemMeta meta = item.getItemMeta();
-        meta.displayName(Text.component((selected ? "&a✔ " : owned ? "&f" : "&8") + tag.displayName()));
+        meta.displayName(Text.component(tag.suffix().stripLeading()));
 
         List<Component> lore = new ArrayList<>();
         for (String line : tag.description()) lore.add(Text.component(line));
         if (!tag.description().isEmpty()) lore.add(Component.empty());
+
+        lore.add(Text.component("&8ID: &7" + tag.id()));
+        lore.add(Text.component("&8Preview: &fYourName" + tag.suffix()));
 
         if (selected) {
             lore.add(Text.component("&aEquipped"));
