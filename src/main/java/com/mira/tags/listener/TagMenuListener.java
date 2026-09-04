@@ -17,7 +17,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import java.util.Optional;
 
 public final class TagMenuListener implements Listener {
-    private static final String PREFIX = "&5&lMira &8>> &r";
+    private static final String PREFIX = "&5&lMira &8&l>> &r";
     private final MiraTagsPlugin plugin;
     private final TagMenuService menus;
     private final TagRegistry registry;
