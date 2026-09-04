@@ -15,8 +15,8 @@ tags:
     enabled: true
     display-name: "&6OG"
     suffix: " &8[&6OG&8]"
-    icon: CLOCK
-    permission: ""
+    icon: NAME_TAG
+    permission: "miratags.tag.og"
     default-unlocked: true
     sort-order: 10
     description:
@@ -26,8 +26,8 @@ tags:
     enabled: true
     display-name: "&aGrinder"
     suffix: " &8[&aGrinder&8]"
-    icon: NETHERITE_PICKAXE
-    permission: ""
+    icon: NAME_TAG
+    permission: "miratags.tag.grinder"
     default-unlocked: true
     sort-order: 20
     description:
@@ -37,8 +37,8 @@ tags:
     enabled: true
     display-name: "&cPvP"
     suffix: " &8[&cPvP&8]"
-    icon: DIAMOND_SWORD
-    permission: ""
+    icon: NAME_TAG
+    permission: "miratags.tag.pvp"
     default-unlocked: true
     sort-order: 30
     description:
@@ -48,8 +48,8 @@ tags:
     enabled: true
     display-name: "&eBuilder"
     suffix: " &8[&eBuilder&8]"
-    icon: BRICKS
-    permission: ""
+    icon: NAME_TAG
+    permission: "miratags.tag.builder"
     default-unlocked: true
     sort-order: 40
     description:
@@ -59,8 +59,8 @@ tags:
     enabled: true
     display-name: "&bCollector"
     suffix: " &8[&bCollector&8]"
-    icon: CHEST
-    permission: ""
+    icon: NAME_TAG
+    permission: "miratags.tag.collector"
     default-unlocked: true
     sort-order: 50
     description:
@@ -70,8 +70,8 @@ tags:
     enabled: true
     display-name: "&eLucky"
     suffix: " &8[&eLucky&8]"
-    icon: RABBIT_FOOT
-    permission: ""
+    icon: NAME_TAG
+    permission: "miratags.tag.lucky"
     default-unlocked: true
     sort-order: 60
     description:
@@ -81,8 +81,8 @@ tags:
     enabled: true
     display-name: "&9Veteran"
     suffix: " &8[&9Veteran&8]"
-    icon: NETHER_STAR
-    permission: ""
+    icon: NAME_TAG
+    permission: "miratags.tag.veteran"
     default-unlocked: true
     sort-order: 70
     description:
@@ -92,8 +92,8 @@ tags:
     enabled: true
     display-name: "&dGG"
     suffix: " &8[&dGG&8]"
-    icon: FIREWORK_ROCKET
-    permission: ""
+    icon: NAME_TAG
+    permission: "miratags.tag.gg"
     default-unlocked: true
     sort-order: 80
     description:
