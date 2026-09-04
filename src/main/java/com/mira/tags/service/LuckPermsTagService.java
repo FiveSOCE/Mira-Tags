@@ -5,12 +5,15 @@ import com.mira.tags.model.TagDefinition;
 import com.mira.tags.util.Text;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.NodeType;
+import net.luckperms.api.node.types.PermissionNode;
 import net.luckperms.api.node.types.SuffixNode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.Locale;
 import java.util.Optional;
 
 public final class LuckPermsTagService {
@@ -24,6 +27,31 @@ public final class LuckPermsTagService {
         this.registry = registry;
         this.playerData = playerData;
         this.luckPerms = LuckPermsProvider.get();
+    }
+
+    public void syncBackingGroups() {
+        for (TagDefinition tag : registry.enabledTags()) {
+            String permission = tag.permission();
+            if (permission == null || permission.isBlank()) continue;
+
+            String groupName = backingGroupName(tag.id());
+            try {
+                Group group = luckPerms.getGroupManager().createAndLoadGroup(groupName).join();
+                group.data().clear(NodeType.PERMISSION.predicate(node ->
+                        node.getKey().startsWith("miratags.tag.")));
+                group.data().add(PermissionNode.builder(permission).value(true).build());
+                luckPerms.getGroupManager().saveGroup(group).join();
+            } catch (RuntimeException exception) {
+                plugin.getLogger().severe("Could not sync LuckPerms backing group '" + groupName
+                        + "' for tag '" + tag.id() + "': " + exception.getMessage());
+            }
+        }
+    }
+
+    public String backingGroupName(String tagId) {
+        String normalized = tagId == null ? "" : tagId.toLowerCase(Locale.ROOT)
+                .replaceAll("[^a-z0-9_-]", "_");
+        return "miratag_" + normalized;
     }
 
     public boolean owns(Player player, TagDefinition tag) {
