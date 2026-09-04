@@ -1,5 +1,5 @@
 name: MiraTags
-version: 0.1.4
+version: 0.1.5
 main: com.mira.tags.MiraTagsPlugin
 api-version: '1.21'
 authors: [FiveS]
