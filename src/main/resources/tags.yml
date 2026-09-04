@@ -1,8 +1,9 @@
-# MiraTags definitions.
-# Replace the example tag with your real server tags.
+# MiraTags starter definitions.
+# These generic tags are available on a fresh install and can be edited/deleted
+# in plugins/MiraTags/tags.yml or through MiraTags administration.
 #
 # permission:
-#   Blank means the tag is grant-only unless default-unlocked is true.
+#   Blank means the tag is controlled by MiraTags grants/default-unlocked state.
 #   Set a permission node to make ownership permission-based.
 #
 # suffix:
@@ -10,14 +11,90 @@
 #   how you want it to appear after the player's name.
 
 tags:
-  example:
+  og:
     enabled: true
-    display-name: "&dExample"
-    suffix: " &8[&dExample&8]"
-    icon: NAME_TAG
+    display-name: "&6OG"
+    suffix: " &8[&6OG&8]"
+    icon: CLOCK
     permission: ""
-    default-unlocked: false
-    sort-order: 100
+    default-unlocked: true
+    sort-order: 10
     description:
-      - "&7Example MiraTags entry."
-      - "&7Grant it with &f/mtags grant <player> example&7."
+      - "&7A simple classic tag."
+
+  grinder:
+    enabled: true
+    display-name: "&aGrinder"
+    suffix: " &8[&aGrinder&8]"
+    icon: NETHERITE_PICKAXE
+    permission: ""
+    default-unlocked: true
+    sort-order: 20
+    description:
+      - "&7For players putting in the hours."
+
+  pvp:
+    enabled: true
+    display-name: "&cPvP"
+    suffix: " &8[&cPvP&8]"
+    icon: DIAMOND_SWORD
+    permission: ""
+    default-unlocked: true
+    sort-order: 30
+    description:
+      - "&7For players who live for the fight."
+
+  builder:
+    enabled: true
+    display-name: "&eBuilder"
+    suffix: " &8[&eBuilder&8]"
+    icon: BRICKS
+    permission: ""
+    default-unlocked: true
+    sort-order: 40
+    description:
+      - "&7For the server architects."
+
+  collector:
+    enabled: true
+    display-name: "&bCollector"
+    suffix: " &8[&bCollector&8]"
+    icon: CHEST
+    permission: ""
+    default-unlocked: true
+    sort-order: 50
+    description:
+      - "&7For players who keep everything."
+
+  lucky:
+    enabled: true
+    display-name: "&eLucky"
+    suffix: " &8[&eLucky&8]"
+    icon: RABBIT_FOOT
+    permission: ""
+    default-unlocked: true
+    sort-order: 60
+    description:
+      - "&7Maybe RNG is actually on your side."
+
+  veteran:
+    enabled: true
+    display-name: "&9Veteran"
+    suffix: " &8[&9Veteran&8]"
+    icon: NETHER_STAR
+    permission: ""
+    default-unlocked: true
+    sort-order: 70
+    description:
+      - "&7A clean veteran-style tag."
+
+  gg:
+    enabled: true
+    display-name: "&dGG"
+    suffix: " &8[&dGG&8]"
+    icon: FIREWORK_ROCKET
+    permission: ""
+    default-unlocked: true
+    sort-order: 80
+    description:
+      - "&7Good game."
