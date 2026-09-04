@@ -93,6 +93,7 @@ public final class TagCreationService {
     private void create(Player player, PendingTag pendingTag, String suffix) {
         try {
             TagDefinition created = registry.create(pendingTag.displayName(), suffix);
+            plugin.syncLuckPermsDefinitions();
             core.messages().send(player, "&aCreated tag &f" + created.displayName() + " &7(&f" + created.id() + "&7).");
             core.messages().send(player, "&7Suffix: &f" + suffix);
             core.messages().send(player, "&7LuckPerms permission: &f" + created.permission());
