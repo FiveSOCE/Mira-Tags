@@ -4,13 +4,13 @@ MiraTags is the GUI-first player-tag system for the Mira Paper server suite. It 
 
 ## Download
 
-[**Download MiraTags v0.1.3**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.3/MiraTags-0.1.3.jar)
+[**Download MiraTags v0.1.4**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.4/MiraTags-0.1.4.jar)
 
 ## Requirements / Dependencies
 
 - Paper 1.21.11
 - Java 21
-- MiraCore 0.1.0 or newer
+- MiraCore 0.2.0 or newer
 - LuckPerms
 
 ## How MiraTags Works
@@ -20,6 +20,8 @@ Tags are persistent definitions stored in `plugins/MiraTags/tags.yml`. Players o
 A tag can be unlocked by `default-unlocked: true`, an internal MiraTags grant, a timed grant, or the configured LuckPerms/Bukkit permission. While a player is online, MiraTags manages one LuckPerms suffix node at its reserved priority so chat/tab plugins that read LuckPerms metadata can display the selected tag.
 
 Administrators can create tags in-game with `/mtags create <Tag Name>`. MiraTags then captures that administrator's next chat message privately as the tag format, cancels the chat broadcast, generates a persistent ID and backing permission such as `miratags.tag.king`, and immediately makes the tag available to the GUI/API. Typing `cancel` aborts the creation flow. Deleting a tag removes its MiraTags definition, internal grants and active selections but intentionally does not remove external LuckPerms assignments.
+
+v0.1.4 adds MiraCore milestone-driven unlocks, timed tag ownership and seasonal champion support. Built-in milestone mappings currently cover FTop Champion, Pinata Slayer and Crate Jackpot, while season champion milestones can generate/grant season-specific tags. A fresh install also ships with eight editable generic starter tags: OG, Grinder, PvP, Builder, Collector, Lucky, Veteran and GG.
 
 ## Commands
 
