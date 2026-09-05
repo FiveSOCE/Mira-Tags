@@ -115,11 +115,23 @@ public final class LuckPermsTagService {
             return;
         }
 
+        if (hasDesiredSuffix(user, tag)) return;
+
         clearManagedSuffix(user);
         if (!dispatchSuffixCommand(player, tag)) {
             plugin.getLogger().warning("LuckPerms did not accept MiraTag suffix command for " + player.getName()
                     + " and tag " + tag.id());
         }
+    }
+
+    private boolean hasDesiredSuffix(User user, TagDefinition tag) {
+        String raw = tag.suffix();
+        if (raw == null) return false;
+        String translated = Text.section(raw);
+
+        return user.getNodes(NodeType.SUFFIX).stream().anyMatch(node ->
+                node.getPriority() == 0
+                        && (raw.equals(node.getMetaValue()) || translated.equals(node.getMetaValue())));
     }
 
     private boolean dispatchSuffixCommand(Player player, TagDefinition tag) {
