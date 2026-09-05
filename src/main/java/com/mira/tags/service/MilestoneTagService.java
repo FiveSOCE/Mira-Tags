@@ -3,6 +3,7 @@ package com.mira.tags.service;
 import com.mira.core.api.MilestoneService;
 import com.mira.core.api.MiraCore;
 import com.mira.tags.MiraTagsPlugin;
+import com.mira.tags.util.CosmeticsBridge;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -45,14 +46,18 @@ public final class MilestoneTagService {
     public void sync(Player player) {
         for (MilestoneService.Milestone milestone : core.milestones().all(player.getUniqueId())) {
             String mapped = mappings.get(milestone.key());
-            if (mapped != null) data.grant(player.getUniqueId(), mapped);
+            if (mapped != null && data.grant(player.getUniqueId(), mapped)) {
+                CosmeticsBridge.play(player, "tag_milestone_unlock");
+            }
             if (milestone.key().startsWith("season.") && milestone.key().endsWith(".champion")) {
                 String[] parts = milestone.key().split("\\.");
                 if (parts.length >= 3) {
                     String id = "season_" + parts[1] + "_champion";
                     ensureBuiltin("Season " + parts[1] + " Champion", "&b[Season " + parts[1] + "]");
                     String created = registry.ids().stream().filter(tag -> tag.equals(id)).findFirst().orElse(null);
-                    if (created != null) data.grant(player.getUniqueId(), created);
+                    if (created != null && data.grant(player.getUniqueId(), created)) {
+                        CosmeticsBridge.play(player, "tag_milestone_unlock");
+                    }
                 }
             }
         }
