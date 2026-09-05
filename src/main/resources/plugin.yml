@@ -1,10 +1,11 @@
 name: MiraTags
-version: 0.1.5
+version: 0.1.6
 main: com.mira.tags.MiraTagsPlugin
 api-version: '1.21'
 authors: [FiveS]
 description: GUI-first tags with milestone achievements, seasonal unlocks and timed ownership.
 depend: [MiraCore, LuckPerms]
+softdepend: [MiraCosmetics]
 
 commands:
   tags:
