@@ -35,19 +35,19 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: MiraTags-0.1.6
-          path: build/libs/MiraTags-0.1.6.jar
+          name: MiraTags-0.1.7
+          path: build/libs/MiraTags-0.1.7.jar
           if-no-files-found: error
 
-      - name: Publish v0.1.6 release if missing
+      - name: Publish v0.1.7 release if missing
         if: github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if ! gh release view v0.1.6 >/dev/null 2>&1; then
-            gh release create v0.1.6 \
-              build/libs/MiraTags-0.1.6.jar \
+          if ! gh release view v0.1.7 >/dev/null 2>&1; then
+            gh release create v0.1.7 \
+              build/libs/MiraTags-0.1.7.jar \
               --target "${{ github.sha }}" \
-              --title "MiraTags v0.1.6" \
-              --notes "Adds optional MiraCosmetics audio hooks for tag equip/remove, admin tag unlocks and milestone/season tag unlock celebrations."
+              --title "MiraTags v0.1.7" \
+              --notes "Hotfixes tag equip so /tags dispatches LuckPerms from console using lp user <username> meta addsuffix 0 <suffix>, cleans legacy MiraTags suffix nodes safely when switching/clearing, and preserves active selections owned through default unlocks or LuckPerms permissions."
           fi
