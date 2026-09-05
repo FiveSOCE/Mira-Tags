@@ -7,6 +7,7 @@ import com.mira.tags.model.TagDefinition;
 import com.mira.tags.service.LuckPermsTagService;
 import com.mira.tags.service.PlayerTagDataService;
 import com.mira.tags.service.TagRegistry;
+import com.mira.tags.util.CosmeticsBridge;
 import com.mira.tags.util.Text;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,6 +47,7 @@ public final class TagMenuListener implements Listener {
         if (rawSlot == TagMenuService.NEXT_SLOT) { menus.open(player, holder.page() + 1); return; }
         if (rawSlot == TagMenuService.CLEAR_SLOT) {
             tagService.clear(player);
+            CosmeticsBridge.play(player, "tag_remove");
             player.sendMessage(Text.component(PREFIX + plugin.clearedMessage()));
             menus.open(player, holder.page());
             return;
@@ -64,8 +66,10 @@ public final class TagMenuListener implements Listener {
         boolean alreadyActive = playerData.active(player.getUniqueId()).filter(tag.get().id()::equals).isPresent();
         if (alreadyActive) {
             tagService.clear(player);
+            CosmeticsBridge.play(player, "tag_remove");
             player.sendMessage(Text.component(PREFIX + plugin.clearedMessage()));
         } else if (tagService.equip(player, tag.get().id())) {
+            CosmeticsBridge.play(player, "tag_equip");
             player.sendMessage(Text.component(PREFIX + plugin.equippedMessage().replace("%tag%", tag.get().displayName())));
         }
         menus.open(player, holder.page());
