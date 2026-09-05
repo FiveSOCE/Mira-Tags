@@ -1,7 +1,7 @@
 luckperms:
-  # MiraTags uses one transient LuckPerms suffix node at this priority.
-  # Keep this priority reserved for MiraTags so it does not compete with another suffix.
-  suffix-priority: 500
+  # MiraTags always applies the selected tag as a LuckPerms suffix at weight 0.
+  # This value is informational and intentionally fixed.
+  suffix-priority: 0
 
 gui:
   title: "&5Tags"
