@@ -67,8 +67,11 @@ public final class LuckPermsTagService {
     public boolean equip(Player player, String tagId) {
         Optional<TagDefinition> found = registry.find(tagId);
         if (found.isEmpty() || !owns(player, found.get())) return false;
+
+        clearManagedSuffix(player);
+        if (!dispatchSuffixCommand(player, found.get())) return false;
+
         playerData.setActive(player.getUniqueId(), found.get().id());
-        apply(player, found.get());
         return true;
     }
 
@@ -113,20 +116,47 @@ public final class LuckPermsTagService {
             return;
         }
 
-        clearAtReservedPriority(user);
-        user.data().add(SuffixNode.builder(Text.section(tag.suffix()), plugin.suffixPriority()).build());
-        luckPerms.getUserManager().saveUser(user);
+        clearManagedSuffix(user);
+        if (!dispatchSuffixCommand(player, tag)) {
+            plugin.getLogger().warning("LuckPerms did not accept MiraTag suffix command for " + player.getName()
+                    + " and tag " + tag.id());
+        }
+    }
+
+    private boolean dispatchSuffixCommand(Player player, TagDefinition tag) {
+        String suffix = tag.suffix();
+        if (suffix == null || suffix.isBlank()) return false;
+        if (suffix.indexOf('"') >= 0 || suffix.indexOf('\n') >= 0 || suffix.indexOf('\r') >= 0) {
+            plugin.getLogger().severe("Refusing unsafe LuckPerms suffix command for tag '" + tag.id()
+                    + "': suffix contains quotes or line breaks.");
+            return false;
+        }
+
+        String command = "lp user " + player.getName() + " meta addsuffix 0 \"" + suffix + "\"";
+        boolean dispatched = Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        if (dispatched) {
+            plugin.getLogger().fine("Applied MiraTag '" + tag.id() + "' through console: " + command);
+        }
+        return dispatched;
     }
 
     private void clearManagedSuffix(Player player) {
         User user = luckPerms.getUserManager().getUser(player.getUniqueId());
         if (user == null) return;
-        clearAtReservedPriority(user);
+        clearManagedSuffix(user);
         luckPerms.getUserManager().saveUser(user);
     }
 
-    private void clearAtReservedPriority(User user) {
-        int priority = plugin.suffixPriority();
-        user.data().clear(NodeType.SUFFIX.predicate(node -> node.getPriority() == priority));
+    private void clearManagedSuffix(User user) {
+        user.data().clear(NodeType.SUFFIX.predicate(node -> isMiraTagSuffix(node.getPriority(), node.getMetaValue())));
+        luckPerms.getUserManager().saveUser(user);
+    }
+
+    private boolean isMiraTagSuffix(int priority, String value) {
+        if (priority != 0 && priority != 500) return false;
+        if (value == null) return false;
+
+        return registry.enabledTags().stream().anyMatch(tag ->
+                value.equals(tag.suffix()) || value.equals(Text.section(tag.suffix())));
     }
 }
