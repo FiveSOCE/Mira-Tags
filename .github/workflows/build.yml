@@ -35,19 +35,19 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: MiraTags-0.1.5
-          path: build/libs/MiraTags-0.1.5.jar
+          name: MiraTags-0.1.6
+          path: build/libs/MiraTags-0.1.6.jar
           if-no-files-found: error
 
-      - name: Publish v0.1.5 release if missing
+      - name: Publish v0.1.6 release if missing
         if: github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if ! gh release view v0.1.5 >/dev/null 2>&1; then
-            gh release create v0.1.5 \
-              build/libs/MiraTags-0.1.5.jar \
+          if ! gh release view v0.1.6 >/dev/null 2>&1; then
+            gh release create v0.1.6 \
+              build/libs/MiraTags-0.1.6.jar \
               --target "${{ github.sha }}" \
-              --title "MiraTags v0.1.5" \
-              --notes "Synchronizes all tag definitions into LuckPerms backing groups from startup, gives every starter tag a real miratags.tag.<id> permission, normalizes the GUI to NAME_TAG items and renders the actual styled in-game tag suffix as the item name."
+              --title "MiraTags v0.1.6" \
+              --notes "Adds optional MiraCosmetics audio hooks for tag equip/remove, admin tag unlocks and milestone/season tag unlock celebrations."
           fi
