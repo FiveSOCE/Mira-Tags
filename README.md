@@ -4,7 +4,9 @@ MiraTags is the GUI-first player-tag system for the Mira Paper server suite. It 
 
 ## Download
 
-[**Download MiraTags v0.1.5**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.5/MiraTags-0.1.5.jar)
+[**Download MiraTags v0.1.6**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.6/MiraTags-0.1.6.jar)
+
+[View All Releases](https://github.com/FiveSOCE/Mira-Tags/releases)
 
 ## Requirements / Dependencies
 
@@ -12,6 +14,7 @@ MiraTags is the GUI-first player-tag system for the Mira Paper server suite. It 
 - Java 21
 - MiraCore 0.2.0 or newer
 - LuckPerms
+- MiraCosmetics optional for centralized audio effects
 
 ## How MiraTags Works
 
@@ -65,3 +68,7 @@ A fresh install creates/synchronizes the following LuckPerms-backed tag groups:
 - `miratag_gg` -> `miratags.tag.gg`
 
 New tags created in-game are synchronized to LuckPerms immediately as well.
+
+## MiraCosmetics Audio Integration (0.1.6)
+
+MiraCosmetics audio hooks cover tag equip/remove, normal unlocks and milestone/season unlock celebrations. MiraCosmetics remains optional.
