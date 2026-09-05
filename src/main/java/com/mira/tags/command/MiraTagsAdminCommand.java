@@ -1,5 +1,6 @@
 package com.mira.tags.command;
 
+import com.mira.tags.util.CosmeticsBridge;
 import com.mira.core.api.MiraCore;
 import com.mira.tags.MiraTagsPlugin;
 import com.mira.tags.model.TagDefinition;
@@ -127,6 +128,7 @@ public final class MiraTagsAdminCommand implements CommandExecutor, TabCompleter
             return;
         }
         boolean changed = playerData.grant(target.getUniqueId(), tag.id());
+        if (changed) CosmeticsBridge.play(target, "tag_unlock");
         core.messages().send(sender, changed
                 ? "&aGranted &f" + tag.id() + " &ato &f" + target.getName() + "&a."
                 : "&e" + target.getName() + " already owns the internal grant for " + tag.id() + ".");
