@@ -100,7 +100,7 @@ public final class MiraTagsPlugin extends JavaPlugin {
         if (tagService != null) tagService.syncBackingGroups();
     }
 
-    public int suffixPriority() { return Math.max(0, getConfig().getInt("luckperms.suffix-priority", 500)); }
+    public int suffixPriority() { return 0; }
     public String guiTitle() { return getConfig().getString("gui.title", "&5Tags"); }
     public boolean hideLockedTags() { return getConfig().getBoolean("gui.hide-locked", false); }
     public String lockedMessage() { return getConfig().getString("gui.locked-message", "&cYou have not unlocked this tag."); }
