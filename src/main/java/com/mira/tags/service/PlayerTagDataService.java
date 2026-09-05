@@ -103,13 +103,7 @@ public final class PlayerTagDataService {
 
     public Optional<String> active(UUID playerId) {
         String active = TagIds.normalize(data.getString(path(playerId, "active"), ""));
-        if (active.isBlank()) return Optional.empty();
-        if (!granted(playerId, active)) {
-            data.set(path(playerId, "active"), null);
-            save();
-            return Optional.empty();
-        }
-        return Optional.of(active);
+        return active.isBlank() ? Optional.empty() : Optional.of(active);
     }
 
     public void setActive(UUID playerId, String tagId) {
