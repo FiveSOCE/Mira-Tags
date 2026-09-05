@@ -4,7 +4,7 @@ MiraTags is the GUI-first player-tag system for the Mira Paper server suite. It 
 
 ## Download
 
-[**Download MiraTags v0.1.7**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.7/MiraTags-0.1.7.jar)
+[**Download MiraTags v0.1.8**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.8/MiraTags-0.1.8.jar)
 
 [View All Releases](https://github.com/FiveSOCE/Mira-Tags/releases)
 
@@ -84,3 +84,15 @@ lp user <username> meta addsuffix 0 "<suffix>"
 Weight is always `0`.
 
 When changing or clearing tags, MiraTags removes only suffix nodes that match known MiraTag values at the new weight `0` or the legacy MiraTags priority `500`. Active tag selections owned through default unlocks or LuckPerms permissions are also preserved correctly across menu refreshes/rejoins.
+
+## Idempotent Suffix Reconciliation (0.1.8)
+
+MiraTags still performs its periodic reconciliation pass so timed/expired tag state can be corrected, but it no longer blindly re-runs the LuckPerms suffix command every pass.
+
+Before applying an active tag, MiraTags now checks the player's LuckPerms suffix nodes for the exact selected MiraTag value at weight `0`.
+
+- if the correct suffix already exists, MiraTags does nothing
+- clicking a new tag runs the console `addsuffix` command once
+- if another system removes or changes the expected suffix later, MiraTags can repair it on a future reconciliation pass
+
+This removes repeated LuckPerms command spam while keeping timed-tag cleanup and state repair working.
