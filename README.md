@@ -4,7 +4,7 @@ MiraTags is the GUI-first player-tag system for the Mira Paper server suite. It 
 
 ## Download
 
-[**Download MiraTags v0.1.6**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.6/MiraTags-0.1.6.jar)
+[**Download MiraTags v0.1.7**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.7/MiraTags-0.1.7.jar)
 
 [View All Releases](https://github.com/FiveSOCE/Mira-Tags/releases)
 
@@ -20,7 +20,7 @@ MiraTags is the GUI-first player-tag system for the Mira Paper server suite. It 
 
 Tags are persistent definitions stored in `plugins/MiraTags/tags.yml`. Players open `/tags` to browse enabled tags, equip an unlocked tag or clear the currently equipped tag. Every tag entry uses a `NAME_TAG` item and the item name is the actual formatted suffix preview, including its configured colors and brackets, rather than the raw tag ID. Only one MiraTag can be active at a time. Player ownership and active selection are stored in `playerdata.yml`.
 
-A tag can be unlocked by `default-unlocked: true`, an internal MiraTags grant, a timed grant, or the configured LuckPerms/Bukkit permission. In v0.1.5 every enabled tag is also synchronized into LuckPerms as a backing group named `miratag_<id>` containing its `miratags.tag.<id>` permission. Starter tags therefore exist in LuckPerms immediately on first boot instead of only existing inside `tags.yml`. While a player is online, MiraTags manages one LuckPerms suffix node at its reserved priority so chat/tab plugins that read LuckPerms metadata can display the selected tag.
+A tag can be unlocked by `default-unlocked: true`, an internal MiraTags grant, a timed grant, or the configured LuckPerms/Bukkit permission. In v0.1.5 every enabled tag is also synchronized into LuckPerms as a backing group named `miratag_<id>` containing its `miratags.tag.<id>` permission. Starter tags therefore exist in LuckPerms immediately on first boot instead of only existing inside `tags.yml`. When a player equips a tag, MiraTags applies it through the LuckPerms console command path at fixed weight `0` so chat/tab plugins that read LuckPerms metadata receive the selected tag in the expected suffix format.
 
 Administrators can create tags in-game with `/mtags create <Tag Name>`. MiraTags then captures that administrator's next chat message privately as the tag format, cancels the chat broadcast, generates a persistent ID and backing permission such as `miratags.tag.king`, and immediately makes the tag available to the GUI/API. Typing `cancel` aborts the creation flow. Deleting a tag removes its MiraTags definition, internal grants and active selections but intentionally does not remove external LuckPerms assignments.
 
@@ -72,3 +72,15 @@ New tags created in-game are synchronized to LuckPerms immediately as well.
 ## MiraCosmetics Audio Integration (0.1.6)
 
 MiraCosmetics audio hooks cover tag equip/remove, normal unlocks and milestone/season unlock celebrations. MiraCosmetics remains optional.
+
+## LuckPerms Equip Hotfix (0.1.7)
+
+Tag selection from `/tags` now applies the selected tag through LuckPerms as a console-level suffix command:
+
+```text
+lp user <username> meta addsuffix 0 "<suffix>"
+```
+
+Weight is always `0`.
+
+When changing or clearing tags, MiraTags removes only suffix nodes that match known MiraTag values at the new weight `0` or the legacy MiraTags priority `500`. Active tag selections owned through default unlocks or LuckPerms permissions are also preserved correctly across menu refreshes/rejoins.
