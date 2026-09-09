@@ -4,7 +4,7 @@ MiraTags is the GUI-first player-tag system for the Mira Paper server suite. It 
 
 ## Download
 
-[**Download MiraTags v0.1.8**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.8/MiraTags-0.1.8.jar)
+[**Download MiraTags v0.1.8**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.9/MiraTags-0.1.9.jar)
 
 [View All Releases](https://github.com/FiveSOCE/Mira-Tags/releases)
 
