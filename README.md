@@ -1,12 +1,14 @@
 # MiraTags
 
-MiraTags is the GUI-first player-tag system for the Mira Paper server suite. It manages persistent tag definitions, player ownership and selection, exposes the active tag through LuckPerms metadata, and supports administrative, timed and programmatic grants.
-
 ## Download
 
-[**Download MiraTags v0.1.8**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.9/MiraTags-0.1.9.jar)
+**Latest compatibility release: v0.1.9**
 
-[View All Releases](https://github.com/FiveSOCE/Mira-Tags/releases)
+[**Download MiraTags-0.1.9.jar**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.9/MiraTags-0.1.9.jar)
+
+[View all releases](https://github.com/FiveSOCE/Mira-Tags/releases)
+
+MiraTags is the GUI-first player-tag system for the Mira Paper server suite. It manages persistent tag definitions, player ownership and selection, exposes the active tag through LuckPerms metadata, and supports administrative, timed and programmatic grants.
 
 ## Requirements / Dependencies
 
