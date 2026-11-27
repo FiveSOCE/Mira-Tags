@@ -4,10 +4,10 @@
 
 | Paper version | Java | JAR | Download |
 | --- | --- | --- | --- |
-| **1.18.2** | 17 | `MiraTags_1.18.2.jar` | [Legacy release](https://github.com/FiveSOCE/Mira-Tags/releases/tag/dev-1.18.2) |
-| **1.21.11–26.2** | 21 baseline; server may require Java 25 | `MiraTags_1.21.11-26.2.jar` | [Modern release](https://github.com/FiveSOCE/Mira-Tags/releases/tag/compat-modern-1.21.11-26.2) |
+| **1.18.2** | 17 | `MiraTags_1.18.2.jar` | [Download legacy JAR](https://github.com/FiveSOCE/Mira-Tags/releases/download/dev-1.18.2/MiraTags_1.18.2.jar) |
+| **1.21.11–26.2** | 21 baseline; server may require Java 25 | `MiraTags_1.21.11-26.2.jar` | [Download modern JAR](https://github.com/FiveSOCE/Mira-Tags/releases/download/compat-modern-1.21.11-26.2/MiraTags_1.21.11-26.2.jar) |
 
-Only install the release asset after the corresponding build passes. **Intermediate versions 1.19–1.21.10 and in-game integration are not yet certified.** Use the matching MiraCore version.
+Both named JAR assets have been published following successful CI builds. **Intermediate versions 1.19–1.21.10 and in-game integration are not yet certified.** Use the matching MiraCore version.
 
 [Legacy source](https://github.com/FiveSOCE/Mira-Tags/tree/compat/1.18.2) · [Modern source](https://github.com/FiveSOCE/Mira-Tags/tree/main) · [All releases](https://github.com/FiveSOCE/Mira-Tags/releases)
 
