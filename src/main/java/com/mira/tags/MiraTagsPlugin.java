@@ -75,7 +75,7 @@ public final class MiraTagsPlugin extends JavaPlugin {
 
         core.modules().setHealth(this, ModuleHealth.HEALTHY,
                 "Tags, milestone achievements, seasonal tags and timed ownership ready");
-        getLogger().info("MiraTags v" + getPluginMeta().getVersion() + " enabled with " + registry.enabledTags().size() + " enabled tag(s).");
+        getLogger().info("MiraTags v" + getDescription().getVersion() + " enabled with " + registry.enabledTags().size() + " enabled tag(s).");
     }
 
     @Override
