@@ -1,22 +1,33 @@
 # MiraTags
 
-## Download
+## Version-specific downloads
 
-**Latest compatibility release: v0.1.9**
+| Paper version | Java | JAR | Download |
+| --- | --- | --- | --- |
+| **1.18.2** | 17 | `MiraTags_1.18.2.jar` | [Legacy release](https://github.com/FiveSOCE/Mira-Tags/releases/tag/dev-1.18.2) |
+| **1.21.11–26.2** | 21 baseline; server may require Java 25 | `MiraTags_1.21.11-26.2.jar` | [Modern release](https://github.com/FiveSOCE/Mira-Tags/releases/tag/compat-modern-1.21.11-26.2) |
 
-[**Download MiraTags-0.1.9.jar**](https://github.com/FiveSOCE/Mira-Tags/releases/download/v0.1.9/MiraTags-0.1.9.jar)
+Only install the release asset after the corresponding build passes. **Intermediate versions 1.19–1.21.10 and in-game integration are not yet certified.** Use the matching MiraCore version.
 
-[View all releases](https://github.com/FiveSOCE/Mira-Tags/releases)
+[Legacy source](https://github.com/FiveSOCE/Mira-Tags/tree/compat/1.18.2) · [Modern source](https://github.com/FiveSOCE/Mira-Tags/tree/main) · [All releases](https://github.com/FiveSOCE/Mira-Tags/releases)
 
-MiraTags is the GUI-first player-tag system for the Mira Paper server suite. It manages persistent tag definitions, player ownership and selection, exposes the active tag through LuckPerms metadata, and supports administrative, timed and programmatic grants.
+## Requirements and integrations
 
-## Requirements / Dependencies
+- **Required:** Paper and Java for the chosen server target, matching **MiraCore** and **LuckPerms**.
+- **Optional:** MiraCosmetics for unlock/equip audio presentation.
+- **Data:** Definitions in `tags.yml`, player entitlements and selections in `playerdata.yml`. Back up before migration.
+- **Permissions:** `miratags.use` (everyone), `miratags.admin` (OP), `miratags.tag.<id>` (per-tag unlocks).
 
-- Paper 1.21.11
-- Java 21
-- MiraCore 0.2.0 or newer
-- LuckPerms
-- MiraCosmetics optional for centralized audio effects
+## Commands
+
+| Command | Permission | Description |
+| --- | --- | --- |
+| `/tags` | `miratags.use` | Open player tag selector |
+| `/mtags create <name>`, `/mtags add <name>` | `miratags.admin` | Create a tag using private chat input |
+| `/mtags delete <tag>` | `miratags.admin` | Delete tag |
+| `/mtags grant <player> <tag>`, `/mtags revoke <player> <tag>` | `miratags.admin` | Manage ownership |
+| `/mtags clear <player>`, `/mtags list`, `/mtags reload`, `/mtags test` | `miratags.admin` | Selection and administration |
+| `/mtagtime <player> <tag> <30m\|12h\|7d>` | `miratags.admin` | Grant time-limited tag |
 
 ## How MiraTags Works
 
