@@ -55,4 +55,4 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks.test { useJUnitPlatform() }
 
-tasks.jar { archiveFileName.set("MiraTags-${project.version}.jar") }
+tasks.jar { archiveFileName.set("MiraTags_1.21.11-26.2.jar") }
